@@ -79,7 +79,7 @@ class Filter(object):
             try:
                 rule = Rule(rul)
             except RuleSyntaxError:
-                print 'syntax error in ', rul
+                print ('syntax error in rule')
             for tok in rule.get_tokens():
                 if len(tok) > 2:
                     if tok not in self.index:
