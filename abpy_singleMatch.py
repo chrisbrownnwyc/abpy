@@ -24,6 +24,7 @@ TYPE_OPTS = (('script', 'external scripts loaded via HTML script tag'),
              ('other', 'types of requests not covered in the list above'))
 TYPE_OPT_IDS = [x[0] for x in TYPE_OPTS]
 
+# holds the matched urls
 hitlist = []
 
 class Rule(object):
@@ -89,29 +90,35 @@ class Filter(object):
                     self.index[tok].append(rule)
 
     def match(self, url, elementtype=None):
+        matched = False
         tokens = RE_TOK.split(url)
         for tok in tokens:
-            if len(tok) > 2:
+            if len(tok) > 2 and not matched:
                 if tok in self.index:
                     for rule in self.index[tok]:
                         if rule.match(url, elementtype=elementtype):
+
+
+                            # for debug - appends matched rule
+                            # hit = url + " " + unicode(rule)
+                            # hitlist.append(hit)
+
+                            # we matched a rule with the url and dont need to check the url any further
                             hitlist.append(url)
-                            print unicode(rule)
-                            continue
+                            matched = True
 
 
 if __name__ == '__main__':
-    f = Filter(file('easylist.txt'))
+    f = Filter(file(sys.argv[1]))
     print 'start matching'
-    lines = (line.rstrip('\n') for line in open(sys.argv[1]))
+    # read urls from file into a list and strips new lines
+    lines = (line.rstrip('\n') for line in open(sys.argv[2]))
+    #check each url fom list if it matches a filter rule
     for line in lines:
         f.match(line)
 
-    outputfile = f = open(sys.argv[2], 'w')
-    print ("Second argument: %s" % str(sys.argv[2]))
-
-    print (len(hitlist))
-    for i in hitlist:
-        print (i)
+    # write hits to file
+    outputfile = f = open(sys.argv[3], 'w')
     for item in hitlist:
         outputfile.write("%s\n" % item)
+    print 'finished successful'
