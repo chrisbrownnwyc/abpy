@@ -24,6 +24,8 @@ TYPE_OPTS = (('script', 'external scripts loaded via HTML script tag'),
              ('other', 'types of requests not covered in the list above'))
 TYPE_OPT_IDS = [x[0] for x in TYPE_OPTS]
 
+hitlist = []
+
 class Rule(object):
     def __init__(self, rule_str):
         self.rule_str = rule_str.strip()
@@ -93,11 +95,23 @@ class Filter(object):
                 if tok in self.index:
                     for rule in self.index[tok]:
                         if rule.match(url, elementtype=elementtype):
-                            return true
-                            break
+                            hitlist.append(url)
+                            print unicode(rule)
+                            continue
 
 
 if __name__ == '__main__':
     f = Filter(file('easylist.txt'))
     print 'start matching'
-    f.match(sys.argv[1])
+    lines = (line.rstrip('\n') for line in open(sys.argv[1]))
+    for line in lines:
+        f.match(line)
+
+    outputfile = f = open(sys.argv[2], 'w')
+    print ("Second argument: %s" % str(sys.argv[2]))
+
+    print (len(hitlist))
+    for i in hitlist:
+        print (i)
+    for item in hitlist:
+        outputfile.write("%s\n" % item)
