@@ -73,8 +73,9 @@ class Rule(object):
 
 
 class Filter(object):
-    def __init__(self, f):
+    def __init__(self, f, **kwargs):
         self.index = {}
+        self.echo = kwargs.get('echo',False)
         for rul in f.xreadlines():
             if rul.startswith('!'): # Comment
                 continue
@@ -91,16 +92,20 @@ class Filter(object):
                     self.index[tok].append(rule)
 
     def match(self, url, elementtype=None):
+        matchlist = []
         tokens = RE_TOK.split(url)
         for tok in tokens:
             if len(tok) > 2:
                 if tok in self.index:
                     for rule in self.index[tok]:
                         if rule.match(url, elementtype=elementtype):
-                            print unicode(rule)
+                            matchlist.append(rule)
+                            if self.echo:
+                                print unicode(rule)
+        return matchlist
 
 
 if __name__ == '__main__':
-    f = Filter(file('easylist.txt'))
+    f = Filter(file(sys.argv[1]), echo=True)
     print 'start matching'
-    f.match(sys.argv[1])
+    f.match(sys.argv[2])
