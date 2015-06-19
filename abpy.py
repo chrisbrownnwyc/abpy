@@ -29,7 +29,6 @@ class Rule(object):
         self.rule_str = rule_str.strip()
         if '$' in rule_str:
             try:
-                #self.pattern, self.optstring = rule_str.split('$')
                 # A regex may contain a $ and that was breaking this
                 rules_split = rule_str.split('$')
                 self.optstring = rules_split.pop()
