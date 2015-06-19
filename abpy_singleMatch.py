@@ -16,5 +16,5 @@ if __name__ == '__main__':
     # write hits to file
     outputfile  = open(sys.argv[3], 'w')
     for item in hitlist:
-        outputfile.write("%s\n" % item)
+        outputfile.write("%s\n" % unicode(item))
     print 'finished successful'
