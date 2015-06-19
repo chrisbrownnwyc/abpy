@@ -39,6 +39,7 @@ class Rule(object):
         else:
             self.pattern = self.rule_str
             self.optstring = ''
+
         self.regex = self._to_regex()
         opts = self.optstring.split(',')
         self.excluded_elements = []
