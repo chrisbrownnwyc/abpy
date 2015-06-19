@@ -1,6 +1,8 @@
 import re
 import sys
+import logging
 
+logger = logging.getLogger(__name__)
 
 RE_TOK = re.compile('\W')
 
@@ -85,7 +87,7 @@ class Filter(object):
             try:
                 rule = Rule(rul)
             except RuleSyntaxError:
-                print 'syntax error in ', rul
+                logger.error( 'syntax error in %s' % rul )
             for tok in rule.get_tokens():
                 if len(tok) > 2:
                     if tok not in self.index:
