@@ -4,15 +4,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-RE_TOK = re.compile('\W')
+__all__ = ['Rule', 'RuleSyntaxError']
 
+RE_TOK = re.compile('\W')
 
 MAP_RE = (('\|\|','(//|\.)'),
           ('\^', r'[/\\:+!@#\$^\^&\*\(\)\|]'),
           ('\*', r'.*'))
 
+
 class RuleSyntaxError(Exception):
     pass
+
 
 TYPE_OPTS = (('script', 'external scripts loaded via HTML script tag'),
              ('image', 'regular images, typically loaded via HTML img tag'),
@@ -25,6 +28,7 @@ TYPE_OPTS = (('script', 'external scripts loaded via HTML script tag'),
              ('elemhide', 'for exception rules only, similar to document but only disables element hiding rules on the page rather than all filter rules (Adblock Plus 1.2 and higher required)'),
              ('other', 'types of requests not covered in the list above'))
 TYPE_OPT_IDS = [x[0] for x in TYPE_OPTS]
+
 
 class Rule(object):
     def __init__(self, rule_str):
