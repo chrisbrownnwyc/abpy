@@ -79,7 +79,7 @@ class Filter(object):
     def __init__(self, f, **kwargs):
         self.index = {}
         self.echo = kwargs.get('echo',False)
-        for rul in f.xreadlines():
+        for rul in f.readlines():
             if rul.startswith('!'): # Comment
                 continue
             if '##' in rul: # HTML rule
@@ -104,11 +104,12 @@ class Filter(object):
                         if rule.match(url, elementtype=elementtype):
                             matchlist.append(rule)
                             if self.echo:
-                                print unicode(rule)
+                                print(str(rule))
         return matchlist
 
 
 if __name__ == '__main__':
-    f = Filter(file(sys.argv[1]), echo=True)
-    print 'start matching'
+    fh = open(sys.argv[1], 'r')
+    f = Filter(fh, echo=True)
+    print('start matching')
     f.match(sys.argv[2])
