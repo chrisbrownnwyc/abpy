@@ -86,7 +86,7 @@ class Filter(object):
         for rul in f.readlines():
             if rul.startswith('!'): # Comment
                 continue
-            if '##' in rul: # HTML rule
+            if '##' in rul:  # HTML rule
                 continue
             try:
                 rule = Rule(rul)
