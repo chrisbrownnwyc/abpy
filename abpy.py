@@ -41,7 +41,7 @@ class Rule(object):
                 self.pattern = '$'.join(rules_split)
 
             except ValueError:
-                raise RuleSyntaxError()
+                raise RuleSyntaxError('Invalid rule syntax')
         else:
             self.pattern = self.rule_str
             self.optstring = ''
@@ -82,21 +82,23 @@ class Rule(object):
 class Filter(object):
     def __init__(self, f, **kwargs):
         self.index = {}
-        self.echo = kwargs.get('echo',False)
+        self.echo = kwargs.get('echo', False)
         for rul in f.readlines():
-            if rul.startswith('!'): # Comment
+            if rul.startswith('!'):  # Comment
                 continue
             if '##' in rul:  # HTML rule
                 continue
             try:
                 rule = Rule(rul)
+
+                for tok in rule.get_tokens():
+                    if len(tok) > 2:
+                        if tok not in self.index:
+                            self.index[tok] = []
+                        self.index[tok].append(rule)
+
             except RuleSyntaxError:
-                logger.error( 'syntax error in %s' % rul )
-            for tok in rule.get_tokens():
-                if len(tok) > 2:
-                    if tok not in self.index:
-                        self.index[tok] = []
-                    self.index[tok].append(rule)
+                logger.error('syntax error in %s' % rul)
 
     def match(self, url, elementtype=None):
         matchlist = []
