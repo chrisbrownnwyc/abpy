@@ -4,7 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-__all__ = ['Rule', 'RuleSyntaxError']
+__all__ = ['Rule', 'RuleSyntaxError', 'Filter']
 
 RE_TOK = re.compile('\W')
 
